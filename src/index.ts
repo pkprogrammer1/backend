@@ -15,8 +15,8 @@ dotenv.config();
 
   const server = new ApolloServer({
     schema: await buildSchema({ resolvers: [UserResolver] }),
-    introspection: true, // Enables introspection
-    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()], // ✅ Enables Playground
+    introspection: true,
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
   });
 
   await server.start();
