@@ -1,30 +1,28 @@
+import "reflect-metadata";
+import express from "express";
+import { ApolloServer } from "apollo-server-express";
+import { buildSchema } from "type-graphql";
+import { UserResolver } from "./resolvers/userResolvers";
+import { AppDataSource } from "./dataSource";
 import dotenv from "dotenv";
-import express, { Request, Response } from "express";
-import cors from "cors";
-import mongoose from "mongoose";
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 
 dotenv.config();
 
-const app = express();
+(async () => {
+  await AppDataSource.initialize();
+  const app = express();
 
-// Middleware
-app.use(express.json());
-app.use(cors({ origin: "https://king-prawn-app-y5pls.ondigitalocean.app" }));
+  const server = new ApolloServer({
+    schema: await buildSchema({ resolvers: [UserResolver] }),
+    introspection: true, // Enables introspection
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()], // ✅ Enables Playground
+  });
 
-// Routes
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World");
-});
+  await server.start();
+  server.applyMiddleware({ app });
 
-// Import and use routes
-import authRoutes from "./routes/Auth";
-
-app.use("/api/auth", authRoutes);
-
-mongoose
-  .connect(process.env.MONGODB_URL as string)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error("MongoDB connection error:", err));
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  app.listen(4000, () => {
+    console.log("🚀 Server ready at http://localhost:4000/graphql");
+  });
+})();
