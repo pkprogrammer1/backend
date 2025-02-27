@@ -8,8 +8,11 @@ import cors from "cors";
 dotenv.config();
 
 const app = express();
+
+// Enable CORS
 app.use(cors());
 
+// Logging middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(`Request: ${req.method} ${req.url}`);
   next();
@@ -30,12 +33,8 @@ AppDataSource.initialize()
     console.log("Connected to PostgreSQL");
 
     // Test database connection
-    try {
-      const result = await AppDataSource.query("SELECT 1 + 1 AS result");
-      console.log("Test Query Result:", result);
-    } catch (error) {
-      console.error("Database test query failed:", error);
-    }
+    const result = await AppDataSource.query("SELECT 1 + 1 AS result");
+    console.log("Test Query Result:", result);
 
     // Start the server
     const port = process.env.PORT || 4000;
@@ -43,6 +42,4 @@ AppDataSource.initialize()
       console.log(`Server running at http://localhost:${port}/graphql`);
     });
   })
-  .catch((error) => {
-    console.error("Error initializing database:", error);
-  });
+  .catch((error) => console.log(error));
