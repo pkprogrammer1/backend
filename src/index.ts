@@ -1,4 +1,4 @@
-import express, { Express } from "express";
+import express, { NextFunction } from "express";
 import { ApolloServer } from "apollo-server-express";
 import { typeDefs } from "./graphql/schema/typeUser";
 import { resolvers } from "./graphql/resolvers/userResolvers";
@@ -10,14 +10,14 @@ import jwt from "jsonwebtoken";
 
 dotenv.config();
 
-const app: Express = express(); // ✅ Use `Express` instead of `Application`
+const app = express() as any;
 
 
 // Enable CORS
 app.use(cors());
 
 // Middleware to log requests
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(`Request: ${req.method} ${req.url}`);
   next();
 });
