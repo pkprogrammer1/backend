@@ -1,6 +1,7 @@
-import express, { Request, Response, NextFunction } from "express";
-import { graphqlHTTP } from "express-graphql";
-import { schema } from "./schema";
+import express from "express";
+import { ApolloServer } from "apollo-server-express";
+import { typeDefs } from "./graphql/schema/typeUser";
+import { resolvers } from "./graphql/resolvers/userResolvers";
 import { AppDataSource } from "./dataSource";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -12,34 +13,39 @@ const app = express();
 // Enable CORS
 app.use(cors());
 
-// Logging middleware
-app.use((req: Request, res: Response, next: NextFunction) => {
+// Middleware to log requests
+app.use((req, res, next) => {
   console.log(`Request: ${req.method} ${req.url}`);
   next();
 });
 
-// GraphQL endpoint
-app.use(
-  "/graphql",
-  graphqlHTTP({
-    schema,
-    graphiql: true,
-  })
-);
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: async ({ req }) => {
+    const token = req.headers.authorization || "";
+    if (!token) return {};
 
-// Initialize database connection
-AppDataSource.initialize()
-  .then(async () => {
-    console.log("Connected to PostgreSQL");
+    try {
+      const decodedToken = jwt.verify(token.replace("Bearer ", ""), process.env.JWT_SECRET!) as { userId: string };
+      return { userId: decodedToken.userId };
+    } catch (err) {
+      console.warn("Invalid token");
+      return {};
+    }
+  },
+});
 
-    // Test database connection
-    const result = await AppDataSource.query("SELECT 1 + 1 AS result");
-    console.log("Test Query Result:", result);
+async function startServer() {
+  await server.start();
+  server.applyMiddleware({ app, path: "/graphql" });
 
-    // Start the server
-    const port = process.env.PORT || 4000;
-    app.listen(port, () => {
-      console.log(`Server running at http://localhost:${port}/graphql`);
-    });
-  })
-  .catch((error) => console.log(error));
+  await AppDataSource.initialize();
+  console.log("Connected to PostgreSQL");
+
+  app.listen(process.env.PORT || 4000, () => {
+    console.log(`🚀 Server ready at http://localhost:${process.env.PORT || 4000}/graphql`);
+  });
+}
+
+startServer().catch((err) => console.error("Error starting server", err));
