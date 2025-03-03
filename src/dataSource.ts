@@ -10,5 +10,9 @@ export const AppDataSource = new DataSource({
   url: process.env.DATABASE_URL, // Use Heroku DATABASE_URL
   synchronize: true, // Change to false in production (use migrations instead)
   logging: true,
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : undefined, // Required for Heroku
   entities: [User], // Update path as needed
 });
