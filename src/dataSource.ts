@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
+import { User } from "./entity/user";
 
 dotenv.config();
 
@@ -13,5 +14,5 @@ export const AppDataSource = new DataSource({
     process.env.NODE_ENV === "production"
       ? { rejectUnauthorized: false }
       : undefined, // Required for Heroku
-  entities: ["src/entities/*.ts"], // Update path as needed
+  entities: [User], // Update path as needed
 });
