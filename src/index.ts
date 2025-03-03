@@ -4,17 +4,16 @@ import { typeDefs } from "./graphql/schema/typeUser";
 import { resolvers } from "./graphql/resolvers/userResolvers";
 import { AppDataSource } from "./dataSource";
 import dotenv from "dotenv";
-import cors from "cors";
 import jwt from "jsonwebtoken";
+import cors from 'cors';
 
 
 dotenv.config();
-
 const app = express() as any;
-
-
-// Enable CORS
-app.use(cors());
+app.use(cors({
+  credentials: true,
+  origin: ["https://studio.apollographql.com"],
+}));
 
 // Middleware to log requests
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -25,6 +24,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  introspection: true, // ✅ Enable introspection (for debugging)
   context: async ({ req }) => {
     const token = req.headers.authorization || "";
     if (!token) return {};
