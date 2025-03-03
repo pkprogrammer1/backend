@@ -1,14 +1,17 @@
-import express from "express";
+import express, { Express } from "express";
 import { ApolloServer } from "apollo-server-express";
 import { typeDefs } from "./graphql/schema/typeUser";
 import { resolvers } from "./graphql/resolvers/userResolvers";
 import { AppDataSource } from "./dataSource";
 import dotenv from "dotenv";
 import cors from "cors";
+import jwt from "jsonwebtoken";
+
 
 dotenv.config();
 
-const app = express();
+const app: Express = express(); // ✅ Use `Express` instead of `Application`
+
 
 // Enable CORS
 app.use(cors());

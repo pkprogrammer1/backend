@@ -6,13 +6,13 @@ import { AppDataSource } from "../../dataSource";
 export const resolvers = {
   Query: {
     getHealth: () => "Server is running",
-    me: async (_, __, context) => {
+    me: async (_: any, __: any, context: { userId?: string }) => {
       if (!context.userId) throw new Error("Not authenticated");
       return await AppDataSource.getRepository(User).findOne({ where: { id: context.userId } });
     },
   },
   Mutation: {
-    register: async (_, { email, password }) => {
+    register: async (_: any, { email, password }: { email: string; password: string }) => {
       const userRepo = AppDataSource.getRepository(User);
       const existingUser = await userRepo.findOne({ where: { email } });
       if (existingUser) throw new Error("User already exists");
@@ -25,7 +25,7 @@ export const resolvers = {
 
       return { ...newUser, token };
     },
-    login: async (_, { email, password }) => {
+    login: async (_: any, { email, password }: { email: string; password: string }) => {
       const userRepo = AppDataSource.getRepository(User);
       const user = await userRepo.findOne({ where: { email } });
       if (!user) throw new Error("User not found");
