@@ -16,5 +16,3 @@ export const AppDataSource = new DataSource({
       : undefined,
   entities: [User], 
 });
-
-

@@ -24,7 +24,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  introspection: true, // ✅ Enable introspection (for debugging)
+  introspection: true,
   context: async ({ req }) => {
     const token = req.headers.authorization || "";
     if (!token) return {};
