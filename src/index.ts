@@ -7,7 +7,6 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import cors from 'cors';
 
-
 dotenv.config();
 const app = express() as any;
 app.use(cors({
@@ -15,7 +14,6 @@ app.use(cors({
   origin: ["https://studio.apollographql.com"],
 }));
 
-// Middleware to log requests
 app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(`Request: ${req.method} ${req.url}`);
   next();
