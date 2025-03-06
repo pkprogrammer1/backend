@@ -11,8 +11,14 @@ dotenv.config();
 const app = express() as any;
 app.use(cors({
   credentials: true,
-  origin: ["https://studio.apollographql.com"],
+  origin: [
+    "https://studio.apollographql.com",
+    "http://localhost:4000",
+    "https://backend-asadd2723-cf857d07e679.herokuapp.com",
+  ],
 }));
+app.use(express.json()); // ✅ Add this
+app.use(express.urlencoded({ extended: true })); // Optional for form data
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(`Request: ${req.method} ${req.url}`);
@@ -38,11 +44,12 @@ const server = new ApolloServer({
 });
 
 async function startServer() {
+  await AppDataSource.initialize();
+  console.log("Connected to PostgreSQL");
+
   await server.start();
   server.applyMiddleware({ app, path: "/graphql" });
 
-  await AppDataSource.initialize();
-  console.log("Connected to PostgreSQL");
 
   app.listen(process.env.PORT || 4000, () => {
     console.log(`🚀 Server ready at http://localhost:${process.env.PORT || 4000}/graphql`);
