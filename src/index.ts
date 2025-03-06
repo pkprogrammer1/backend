@@ -17,8 +17,8 @@ app.use(cors({
     "https://backend-asadd2723-cf857d07e679.herokuapp.com",
   ],
 }));
-app.use(express.json()); // ✅ Add this
-app.use(express.urlencoded({ extended: true })); // Optional for form data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(`Request: ${req.method} ${req.url}`);
@@ -48,7 +48,7 @@ async function startServer() {
   console.log("Connected to PostgreSQL");
 
   await server.start();
-  server.applyMiddleware({ app, path: "/graphql" });
+  server.applyMiddleware({ app });
 
 
   app.listen(process.env.PORT || 4000, () => {
