@@ -1,36 +1,27 @@
-import { ApolloServer } from "apollo-server";
+import express from "express";
+import { ApolloServer } from "apollo-server-express";
 import { typeDefs } from "./graphql/schema/typeUser";
 import { resolvers } from "./graphql/resolvers/userResolvers";
 import { AppDataSource } from "./dataSource";
 import dotenv from "dotenv";
-import express from "express";
 import jwt from "jsonwebtoken";
 
 dotenv.config();
 
-// Express for static files
 const app = express();
+app.use(express.json()); // ✅ Ensure Express can parse JSON
 app.use(express.static("public"));
 
 const server = new ApolloServer({
-  cors: {
-    credentials: true,
-    origin: [
-      "https://studio.apollographql.com",
-      "http://localhost:3000",
-      "https://your-frontend-app.com",
-    ],
-  },
   typeDefs,
   resolvers,
-  introspection: true,
+  introspection: true, // ✅ Required for Apollo Studio
   context: async ({ req }) => {
     const token = req.headers.authorization || "";
     if (!token) return {};
-    const isIntrospectionQuery = req.body.query && req.body.query.includes('__schema');
-    if (isIntrospectionQuery) {
-        return {}; // Return an empty context for introspection queries
-    }
+    const isIntrospectionQuery = req.body?.query?.includes('__schema'); // ✅ Fix optional chaining
+    if (isIntrospectionQuery) return {};
+    
     try {
       const decodedToken = jwt.verify(token.replace("Bearer ", ""), process.env.JWT_SECRET!) as { userId: string };
       return { userId: decodedToken.userId };
@@ -41,19 +32,17 @@ const server = new ApolloServer({
   },
 });
 
-// Start database and servers
-AppDataSource.initialize()
-  .then(() => {
-    app.listen(4001, () => {
-      console.log(`🚀 Express Server ready at 4001`);
-    });
+async function startServer() {
+  await AppDataSource.initialize();
+  console.log("✅ Connected to PostgreSQL");
 
-    const PORT = process.env.PORT || 4000;
+  await server.start();
+  server.applyMiddleware({ app: app as any, path: "/" });
 
-    server.listen({ port: PORT }).then(({ url }) => {
-      console.log(`🚀 GraphQL Server ready at ${url}`);
-    });
-  })
-  .catch((error) => {
-    console.error("Error initializing data source:", error);
+  const PORT = process.env.PORT || 4000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Server ready at http://localhost:${PORT}`);
   });
+}
+
+startServer().catch((err) => console.error("❌ Error starting server:", err));
