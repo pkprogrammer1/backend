@@ -1,31 +1,26 @@
-import express, { NextFunction } from "express";
-import { ApolloServer } from "apollo-server-express";
+import { ApolloServer } from "apollo-server";
 import { typeDefs } from "./graphql/schema/typeUser";
 import { resolvers } from "./graphql/resolvers/userResolvers";
 import { AppDataSource } from "./dataSource";
 import dotenv from "dotenv";
+import express from "express";
 import jwt from "jsonwebtoken";
-import cors from 'cors';
 
 dotenv.config();
-const app = express() as any;
-app.use(cors({
-  credentials: true,
-  origin: [
-    "https://studio.apollographql.com",
-    "http://localhost:4000",
-    "https://backend-asadd2723-cf857d07e679.herokuapp.com",
-  ],
-}));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-  console.log(`Request: ${req.method} ${req.url}`);
-  next();
-});
+// Express for static files
+const app = express();
+app.use(express.static("public"));
 
 const server = new ApolloServer({
+  cors: {
+    credentials: true,
+    origin: [
+      "https://studio.apollographql.com",
+      "http://localhost:3000",
+      "https://your-frontend-app.com",
+    ],
+  },
   typeDefs,
   resolvers,
   introspection: true,
@@ -43,17 +38,17 @@ const server = new ApolloServer({
   },
 });
 
-async function startServer() {
-  await AppDataSource.initialize();
-  console.log("Connected to PostgreSQL");
+// Start database and servers
+AppDataSource.initialize()
+  .then(() => {
+    app.listen(4001, () => {
+      console.log(`🚀 Express Server ready at 4001`);
+    });
 
-  await server.start();
-  server.applyMiddleware({ app });
-
-
-  app.listen(process.env.PORT || 4000, () => {
-    console.log(`🚀 Server ready at http://localhost:${process.env.PORT || 4000}/graphql`);
+    server.listen({ port: 4000 }).then(({ url }) => {
+      console.log(`🚀 GraphQL Server ready at ${url}`);
+    });
+  })
+  .catch((error) => {
+    console.error("Error initializing data source:", error);
   });
-}
-
-startServer().catch((err) => console.error("Error starting server", err));

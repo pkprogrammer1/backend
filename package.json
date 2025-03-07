@@ -7,6 +7,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/express-serve-static-core": "^5.0.6",
+    "apollo-server": "^3.13.0",
     "apollo-server-express": "^3.13.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
