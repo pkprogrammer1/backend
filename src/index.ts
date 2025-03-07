@@ -27,7 +27,10 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     const token = req.headers.authorization || "";
     if (!token) return {};
-
+    const isIntrospectionQuery = req.body.query && req.body.query.includes('__schema');
+    if (isIntrospectionQuery) {
+        return {}; // Return an empty context for introspection queries
+    }
     try {
       const decodedToken = jwt.verify(token.replace("Bearer ", ""), process.env.JWT_SECRET!) as { userId: string };
       return { userId: decodedToken.userId };
