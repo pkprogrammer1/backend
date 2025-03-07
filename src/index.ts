@@ -45,7 +45,7 @@ AppDataSource.initialize()
       console.log(`🚀 Express Server ready at 4001`);
     });
 
-    const PORT = process.env.PORT || 4000; // ✅ Always use process.env.PORT on Heroku
+    const PORT = process.env.PORT || 4000;
 
     server.listen({ port: PORT }).then(({ url }) => {
       console.log(`🚀 GraphQL Server ready at ${url}`);
