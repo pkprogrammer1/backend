@@ -6,6 +6,7 @@
   "author": "asadd2723 <asadu3040@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@apollo/server": "^4.11.3",
     "@types/express-serve-static-core": "^5.0.6",
     "apollo-server": "^3.13.0",
     "apollo-server-express": "^3.13.0",

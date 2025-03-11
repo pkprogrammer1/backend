@@ -9,17 +9,17 @@ import jwt from "jsonwebtoken";
 dotenv.config();
 
 const app = express();
-app.use(express.json()); // ✅ Ensure Express can parse JSON
+app.use(express.json());
 app.use(express.static("public"));
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  introspection: true, // ✅ Required for Apollo Studio
+  introspection: true,
   context: async ({ req }) => {
     const token = req.headers.authorization || "";
     if (!token) return {};
-    const isIntrospectionQuery = req.body?.query?.includes('__schema'); // ✅ Fix optional chaining
+    const isIntrospectionQuery = req.body?.query?.includes('__schema');
     if (isIntrospectionQuery) return {};
     
     try {
