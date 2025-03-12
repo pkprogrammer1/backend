@@ -5,7 +5,7 @@ import { AppDataSource } from "../../dataSource";
 
 export const resolvers = {
   Query: {
-    getHealth: () => "Server is running",
+    getHealth: () => "Server is running...",
     me: async (_: any, __: any, context: { userId?: string }) => {
       if (!context.userId) throw new Error("Not authenticated");
       return await AppDataSource.getRepository(User).findOne({ where: { id: context.userId } });
