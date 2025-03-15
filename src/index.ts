@@ -1,6 +1,6 @@
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
-import { typeDefs } from "./graphql/schema";
+import { typeDefs } from "./graphql/schema/index";
 import { resolvers } from "./graphql/resolvers";
 import { AppDataSource } from "./dataSource";
 import dotenv from "dotenv";
