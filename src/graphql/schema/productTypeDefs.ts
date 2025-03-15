@@ -1,6 +1,6 @@
 import { gql } from "apollo-server-express";
 
-export const productTypeDefs = gql`
+const productTypeDefs = gql`
   type Product {
     id: ID!
     name: String!
@@ -20,3 +20,5 @@ export const productTypeDefs = gql`
     deleteProduct(id: ID!): Boolean!
   }
 `;
+
+export { productTypeDefs };
