@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
-import { User } from "./entity/user";
+import { Category, Product, User } from "./entity";
 
 dotenv.config();
 
@@ -14,5 +14,5 @@ export const AppDataSource = new DataSource({
     process.env.NODE_ENV === "production"
       ? { rejectUnauthorized: false }
       : undefined,
-  entities: [User], 
+  entities: [User, Product, Category], 
 });

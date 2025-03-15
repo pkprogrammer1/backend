@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { User } from "../../entity/user";
+import { User } from "../../entity/User";
 import { AppDataSource } from "../../dataSource";
 
 export const resolvers = {
