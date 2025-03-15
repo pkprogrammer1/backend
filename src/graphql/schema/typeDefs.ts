@@ -9,7 +9,6 @@ import { productTypeDefs } from "./productTypeDefs";
 //   type Query {
 //     getHealth: String!
 //     me: User
-//     # Other Query fields from Category and Product will extend this
 //   }
 
 //   type Mutation {
