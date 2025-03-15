@@ -12,7 +12,7 @@ export class Product {
   @Column("float")
   price!: number;
 
-  // Many products belong to one category.
+  // Many products belong to one category
   @ManyToOne(() => Category, (category) => category.products)
   category!: Category;
 }
