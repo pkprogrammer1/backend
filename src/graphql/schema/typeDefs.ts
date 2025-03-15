@@ -14,7 +14,6 @@ import { productTypeDefs } from "./productTypeDefs";
 //   type Mutation {
 //     register(email: String!, password: String!): User
 //     login(email: String!, password: String!): User
-//     # Other Mutation fields from Category and Product will extend this
 //   }
 // `;
 
