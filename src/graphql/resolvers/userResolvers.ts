@@ -1,9 +1,9 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { User } from "../../entity/User";
+import { User } from "../../entity";
 import { AppDataSource } from "../../dataSource";
 
-export const resolvers = {
+export const userResolvers = {
   Query: {
     getHealth: () => "Server is running......",
     me: async (_: any, __: any, context: { userId?: string }) => {
