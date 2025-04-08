@@ -34,7 +34,7 @@ const server = new ApolloServer({
 
 async function startServer() {
   await AppDataSource.initialize();
-  console.log("✅ Connected to PostgreSQ......");
+  console.log("✅ Connected to PostgreSQ...");
 
   await server.start();
   server.applyMiddleware({ app: app as any, path: "/" });
