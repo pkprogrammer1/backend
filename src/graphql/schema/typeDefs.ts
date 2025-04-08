@@ -3,7 +3,6 @@ import { categoryTypeDefs } from "./categoryTypeDefs";
 import { productTypeDefs } from "./productTypeDefs";
 
 // import { gql } from "apollo-server-express";
-
 // // Base schema for shared Query and Mutation types
 // const baseTypeDefs = gql`
 //   type Query {
