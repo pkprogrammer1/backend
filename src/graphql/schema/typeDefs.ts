@@ -16,6 +16,9 @@ import { productTypeDefs } from "./productTypeDefs";
 //   }
 // `;
 
+
+
+
 export const typeDefs = [
   userTypeDefs,
   categoryTypeDefs,
