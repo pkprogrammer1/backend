@@ -10,11 +10,14 @@ import { productTypeDefs } from "./productTypeDefs";
 //     me: User
 //   }
 
+
+
 //   type Mutation {
 //     register(email: String!, password: String!): User
 //     login(email: String!, password: String!): User
 //   }
 // `
+
 
 export const typeDefs = [
   userTypeDefs,
