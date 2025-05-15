@@ -1,12 +1,21 @@
 // src/context.ts
 import { PrismaClient } from '@prisma/client';
+import type { ExpressContextFunctionArgument } from '@apollo/server/express4';
 
-export const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
 export interface Context {
   prisma: PrismaClient;
+  req?: Express.Request;
+  res?: Express.Response;
 }
 
-export function createContext(): Context {
-  return { prisma };
+export async function createContext(
+  context: ExpressContextFunctionArgument
+): Promise<Context> {
+  return {
+    prisma,
+    req: context.req,
+    res: context.res,
+  };
 }
