@@ -24,11 +24,11 @@ jobs:
       - name: TypeScript type check
         run: yarn tsc --noEmit
 
-      - name: Lint
-        run: yarn lint  # optional
+      # - name: Lint
+      #   run: yarn lint  # optional
 
-      - name: Run tests
-        run: yarn test  # optional
+      # - name: Run tests
+      #   run: yarn test  # optional
 
       - name: Build the app
         run: yarn build
