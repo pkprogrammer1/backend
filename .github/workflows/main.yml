@@ -38,15 +38,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+      - uses: actions/checkout@v3
+
       - name: Install Heroku CLI
+        run: curl https://cli-assets.heroku.com/install.sh | sh
+
+      - name: Setup Git Auth for Heroku
         run: |
-          curl https://cli-assets.heroku.com/install.sh | sh
+          git config --global user.email "pkprogrammer1@gmail.com"
+          git config --global user.name "pkprogrammer1"
+          echo "machine git.heroku.com\n  login ${{ secrets.HEROKU_API_KEY }}\n  password ${{ secrets.HEROKU_API_KEY }}" > ~/.netrc
           
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: "backend-asadd2723"
-          heroku_email: "https://backend-asadd2723-cf857d07e679.herokuapp.com/"
+          heroku_email: "pkprogrammer1@gmail.com"
           usedocker: false  # unless you're using a Dockerfile
