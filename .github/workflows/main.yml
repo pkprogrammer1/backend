@@ -1,0 +1,48 @@
+name: CI/CD to Heroku
+
+on:
+  push:
+    branches:
+      - main  # or your deployment branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18  # use your project's Node version
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: TypeScript type check
+        run: yarn tsc --noEmit
+
+      - name: Lint
+        run: yarn lint  # optional
+
+      - name: Run tests
+        run: yarn test  # optional
+
+      - name: Build the app
+        run: yarn build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: "backend-asadd2723"
+          heroku_email: "https://backend-asadd2723-cf857d07e679.herokuapp.com/"
+          usedocker: false  # unless you're using a Dockerfile
