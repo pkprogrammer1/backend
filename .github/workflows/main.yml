@@ -49,4 +49,4 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: "backend-asadd2723"
           heroku_email: "https://backend-asadd2723-cf857d07e679.herokuapp.com/"
-          usedocker: true  # unless you're using a Dockerfile
+          usedocker: false  # unless you're using a Dockerfile
