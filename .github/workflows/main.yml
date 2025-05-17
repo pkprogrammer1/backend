@@ -50,6 +50,7 @@ jobs:
           echo "machine git.heroku.com\n  login ${{ secrets.HEROKU_API_KEY }}\n  password ${{ secrets.HEROKU_API_KEY }}" > ~/.netrc
           
       - name: Deploy to Heroku
+        if: success()
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
