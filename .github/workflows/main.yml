@@ -3,7 +3,7 @@ name: CI/CD to Heroku
 on:
   push:
     branches:
-      - main  # or your deployment branch
+      - main  # Trigger only on pushes to main
 
 jobs:
   build:
@@ -24,11 +24,11 @@ jobs:
       - name: TypeScript type check
         run: yarn tsc --noEmit
 
+      # Optional lint and test
       # - name: Lint
-      #   run: yarn lint  # optional
-
+      #   run: yarn lint
       # - name: Run tests
-      #   run: yarn test  # optional
+      #   run: yarn test
 
       - name: Build the app
         run: yarn build
@@ -36,24 +36,20 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Install Heroku CLI
         run: curl https://cli-assets.heroku.com/install.sh | sh
 
-      - name: Setup Git Auth for Heroku
+      - name: Deploy to Heroku
+        if: success()  # Deploy only if build succeeded
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
           git config --global user.email "pkprogrammer1@gmail.com"
           git config --global user.name "pkprogrammer1"
-          echo "machine git.heroku.com\n  login ${{ secrets.HEROKU_API_KEY }}\n  password ${{ secrets.HEROKU_API_KEY }}" > ~/.netrc
-          
-      - name: Deploy to Heroku
-        if: success()
-        uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: "backend-asadd2723"
-          heroku_email: "pkprogrammer1@gmail.com"
-          usedocker: false  # unless you're using a Dockerfile
+          git remote add heroku https://heroku:${HEROKU_API_KEY}@git.heroku.com/backend-asadd2723.git
+          git push heroku HEAD:main -f
