@@ -16,7 +16,7 @@ const resolvers = {
 async function main() {
   const server = new ApolloServer({ typeDefs, resolvers });
   const { url } = await startStandaloneServer(server);
-  console.log(`🚀 Server ready at ${url}`);
+  console.log(`🚀 Server ready at... ${url}`);
 }
 
 main();
